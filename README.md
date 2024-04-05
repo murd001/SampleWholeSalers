@@ -16,7 +16,7 @@ A simple but fully functional whole sale platform in python flask
    pip install -r requirements.txt
 4. clone this repo:
    ```bash
-   git clone https://github.com/murd001/SampleWholeSalers
+   git clone https://github.com/murd001/SampleWholeSalers.git
 6. cd into the project folder:
    ```bash
    cd SampleWholeSalers
