@@ -5,13 +5,21 @@ A simple but fully functional whole sale platform in python flask
 ![Home Page](https://github.com/murd001/SampleWholeSalers/blob/main/project%20screenshots/homepageloggedin.png?raw=true)
 
 
-To run the project follow these steps:
-1. create and activate a conda environment
+### Running the Project
+
+1. **Create and Activate Conda Environment**:
+   ```bash
+   conda create --name myenv python=3.8
+   conda activate myenv
 2. install all the needed dependacies buy running:
+   ```bash
    pip install -r requirements.txt
-3. clone this repo:
+4. clone this repo:
+   ```bash
    git clone https://github.com/murd001/SampleWholeSalers
-4. cd into the project folder:
+6. cd into the project folder:
+   ```bash
    cd SampleWholeSalers
-5. run the app:
+8. run the app:
+   ```bash
    python app.py
