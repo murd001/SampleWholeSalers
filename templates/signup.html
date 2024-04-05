@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wholesalers Registration</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Custom CSS styles */
+    body {
+      background-color: #1a1a1a;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      background-color: #333;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      margin-top: 100px;
+    }
+    .btn-primary {
+      background-color: #4CAF50;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+    label {
+      margin-bottom: 0.5rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="address"],
+    textarea {
+        background-color: #444;
+        color: #fff; 
+        border: 1px solid #666;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    input[type="password"]:focus,
+    input[type="address"]:focus,
+    textarea:focus {
+        background-color: #555;
+        color: #fff; 
+        border: 1px solid #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="mt-5 text-center">Wholesalers Registration</h2>
+    <div class="category-selection">
+      <p>Please select your category:</p>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="category" id="household" value="household">
+        <label class="form-check-label" for="household">
+          Household
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="category" id="retail" value="retail">
+        <label class="form-check-label" for="retail">
+          Retail Business
+        </label>
+      </div>
+      <button id="continueBtn" class="btn btn-primary mt-3 btn-block">Continue</button>
+    </div>
+    <div class="text-center mt-3">
+        <p>Have an account? <a href="{{ url_for('login') }}">Sign In</a></p>
+    </div>
+    <div id="registrationForm" style="display: none;">
+      <!-- Registration form fields -->
+      <form action="{{ url_for('register') }}" method="POST" onsubmit="return validateForm()">
+        <div class="form-group">
+          <label for="companyName" id="companyNameLabel">Company Name</label>
+          <input type="text" class="form-control" id="companyName" name="companyName" placeholder="Enter company name" required>
+        </div>
+        <div class="form-group">
+          <label for="contactPerson">Contact Person</label>
+          <input type="text" class="form-control" id="contactPerson" name="contactPerson" placeholder="Enter contact person name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone number" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea class="form-control" id="address" name="address" rows="3" placeholder="Describe your address, From your county ward, to buidling or street name." required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    // JavaScript for category selection
+    document.getElementById('continueBtn').addEventListener('click', function() {
+      var selectedCategory = document.querySelector('input[name="category"]:checked');
+      if (selectedCategory) {
+        document.getElementById('registrationForm').style.display = 'block';
+        document.querySelector('.category-selection').style.display = 'none';
+        // Change label and input type based on selected category
+        var companyNameLabel = document.getElementById('companyNameLabel');
+        if (selectedCategory.value === "household") {
+          companyNameLabel.textContent = "Surname";
+        } else {
+          companyNameLabel.textContent = "Company Name";
+        }
+      } else {
+        alert('Please select a category before continuing.');
+      }
+    });
+    // JavaScript for form validation
+    function validateForm() {
+      var companyName = document.getElementById('companyName').value;
+      var contactPerson = document.getElementById('contactPerson').value;
+      var email = document.getElementById('email').value;
+      var phone = document.getElementById('phone').value;
+      var address = document.getElementById('address').value;
+      var password = document.getElementById('password').value;
+      var confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (!contactPerson || !email || !phone || !address || !password || !confirmPassword) {
+        alert('Please fill out all required fields.');
+        return false; // Prevent form submission
+      }
+      if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return false; // Prevent form submission
+      }
+      return true; // Allow form submission if all validations pass
+    }
+  </script>
+</body>
+</html>

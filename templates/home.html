@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wholesale Ecommerce</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-XYZ==" crossorigin="anonymous" />
+  <style>
+    /* Custom CSS styles */
+    body {
+      background-color: #647a6e;
+    }
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s;
+      height: 100%; /* Set card height to 100% */
+    }
+    .card:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .card-img-top {
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      height: 200px;
+      object-fit: cover;
+    }
+    .card-title {
+      font-size: 20px;
+      margin-bottom: 0.5rem;
+    }
+    .card-text {
+      font-size: 16px;
+    }
+    .card-footer {
+      background-color: #f8f9fa;
+      border: none;
+      border-radius: 0 0 10px 10px;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      transition: background-color 0.3s;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    } 
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Wholesale Ecommerce</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        {% if current_user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('cart') }}">My Cart</a>
+            </li>
+            <li class="nav-item">
+                <form action="{{ url_for('logout') }}" method="post">
+                    <button type="submit" class="btn btn-link nav-link">Logout</button>
+                </form>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+            </li>
+        {% endif %}
+      </ul>
+      <form class="form-inline my-2 my-lg-0" action="{{ url_for('search') }}" method="GET">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+   
+ <!-- Product display -->
+  <div class="container mt-5">
+    <div class="row">
+      {% for product in products %}
+        {% if product.quantity > 0 %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 d-flex flex-column">
+              <a href="{{ url_for('product_details', product_id=product.id) }}">
+                <img src="{{ url_for('static', filename='uploads/' + product.images.split(',')[0]) }}" alt="Product Image" class="card-img-top">
+                <div class="card-body" style="height: 200px;">
+                  <h2 class="card-title">{{ product.name }}</h2>
+                  <p class="card-text" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Description: {{ product.description | truncate(50) }}</p>
+                  <p class="card-text">Price: KES{{ product.price }}</p>
+                  <p class="card-text">Quantity Available: {{ product.quantity }}</p>
+                </div>
+              </a>
+              <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post" class="mt-auto">
+                <div class="form-group">
+                  <label for="quantity_{{ product.id }}" style="font-weight: bold;">Order Quantity:</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="quantity_{{ product.id }}" name="quantity" value="1" min="1" max="{{ product.quantity }}">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary btn-plus" type="button" data-product-id="{{ product.id }}">+</button>
+                      <button class="btn btn-outline-secondary btn-minus" type="button" data-product-id="{{ product.id }}">-</button>
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Add to Cart</button>
+              </form>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div> 
+  <script>
+    // JavaScript for plus and minus buttons
+    document.querySelectorAll('.btn-plus').forEach(button => {
+      button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        const input = document.getElementById('quantity_' + productId);
+        input.value = parseInt(input.value) + 1;
+      });
+    });
+  
+    document.querySelectorAll('.btn-minus').forEach(button => {
+      button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        const input = document.getElementById('quantity_' + productId);
+        if (parseInt(input.value) > 1) {
+          input.value = parseInt(input.value) - 1;
+        }
+      });
+    });
+  </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Custom CSS styles */
+    body {
+      background-color: #647a6e;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      padding: 30px;
+      margin-top: 100px;
+    }
+    h1 {
+      color: #4CAF50;
+      text-align: center;
+    }
+    h2 {
+      color: #055a45;
+      background-color: aliceblue;
+      border-radius: 5px;
+      text-align: center;
+      padding: 5px 10px;
+    }
+    p {
+      color: #fff;
+    }
+    .btn-delete {
+      background-color: #c72b3b;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none; /* Remove underline */
+    }
+    .total-amount {
+      font-size: 24px;
+      color: #4CAF50;
+      background-color: #293a03;
+      border-radius: 5px;
+      padding: 10px;
+      text-align: center;
+    }
+    .btn-checkout {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none; /* Remove underline */
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" text="center" href="{{ url_for('home') }}">MY CART</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{{ url_for('home') }}">Home <span class="sr-only">(current)</span></a>
+        </li>
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('orders') }}">My Orders</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    {% if current_user.is_authenticated %}
+      <h2>Here's your cart, {{ current_user.company_name }}</h2><br><br>
+    {% endif %}
+    <ul>
+        {% for cart_item in cart_items %}
+            <li>
+                <h3>{{ cart_item.product.name }}</h3>
+                <p>Description: {{ cart_item.product.description }}</p>
+                <p>Price: KES {{ cart_item.product.price }}</p>
+                <p>Quantity: {{ cart_item.quantity }}</p>
+                <p>Item Total: KES {{ cart_item.product.price * cart_item.quantity }}</p>
+                <form action="{{ url_for('remove_from_cart', product_id=cart_item.product_id) }}" method="post">
+                    <button type="submit" class="btn-delete">Delete</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    <!-- Display total amount -->
+    <p class="total-amount">Total Amount: KES {{ total_amount }}</p>
+    <a href="{{ url_for('checkout') }}" class="btn-checkout">Checkout</a><br>
+    <a href="{{ url_for('home') }}" class="btn-delete">Continue Shopping</a>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
